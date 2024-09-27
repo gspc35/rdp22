@@ -8,10 +8,13 @@ jobs:
 
     steps:
     - name: Download Latest Ngrok
-      run: Invoke-WebRequest https://ngrok.com/download -OutFile ngrok-stable-windows-amd64.zip
+      run: Invoke-WebRequest https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip -OutFile ngrok.zip
     
-    - name: Extract Ngrok
-      run: Expand-Archive -Path ngrok-stable-windows-amd64.zip -DestinationPath ngrok
+    - name: Install 7zip
+      run: choco install 7zip -y
+    
+    - name: Extract Ngrok using 7zip
+      run: 7z x ngrok.zip -o"./ngrok"
     
     - name: Authenticate Ngrok
       run: .\ngrok\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
