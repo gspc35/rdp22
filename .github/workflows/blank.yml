@@ -16,10 +16,14 @@ jobs:
     - name: Extract Ngrok using 7zip
       run: 7z x ngrok.zip -o"./ngrok"
     
-    - name: Authenticate Ngrok
-      run: .\ngrok\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
-      env:
-        NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+    - name: Set Up Ngrok Configuration File
+      run: |
+        echo "version: 3" > ngrok.yml
+        echo "authtoken: $2nvqTPIGWUgWzQ2AfzIxjb57hlq_49accnteDvzrPRGCUfMtG" >> ngrok.yml
+        echo "tunnels:" >> ngrok.yml
+        echo "  your_tunnel_name:" >> ngrok.yml
+        echo "    proto: tcp" >> ngrok.yml
+        echo "    addr: 3389" >> ngrok.yml
     
     - name: Enable Remote Desktop
       run: |
@@ -33,4 +37,4 @@ jobs:
         Set-LocalUser -Name "runneradmin" -Password $password
     
     - name: Create Ngrok Tunnel
-      run: .\ngrok\ngrok.exe tcp 3389
+      run: .\ngrok\ngrok.exe start --config ngrok.yml your_tunnel_name
